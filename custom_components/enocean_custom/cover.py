@@ -12,8 +12,8 @@ from homeassistant.components.cover import (
 from homeassistant.const import CONF_ID, CONF_NAME, CONF_DEVICE_CLASS
 import homeassistant.helpers.config_validation as cv
 
-from enocean.protocol.packet import RadioPacket
-from enocean.protocol.constants import RORG
+from .enocean.protocol.packet import RadioPacket
+from .enocean.protocol.constants import RORG
 
 from .const import DATA_ENOCEAN, ENOCEAN_DONGLE
 from .device import EnOceanEntity

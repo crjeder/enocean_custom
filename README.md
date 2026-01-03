@@ -4,7 +4,7 @@
 
 > Custom EnOcean integration for Home Assistant, fork of the official integration.
 
-:warning: This integration is not maintained anymore because I moved out.
+:warning: This is experimental!
 
 ## Configuration
 
@@ -50,3 +50,4 @@ To communicate with your devices, your dongle must be registred into your device
 
 - [Official EnOcean integration](https://www.home-assistant.io/integrations/enocean/)
 - [EnOcean library, `kipe/enocean`](https://github.com/kipe/enocean)
+- [fork of the EnOcean library, actively maintained (ChristopheHD/enocean)](https://github.com/ChristopheHD/enocean)

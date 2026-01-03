@@ -7,8 +7,8 @@ from homeassistant.const import CONF_ID, CONF_NAME
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import ToggleEntity
 
-from enocean.protocol.packet import RadioPacket
-from enocean.protocol.constants import RORG
+from .enocean.protocol.packet import RadioPacket
+from .enocean.protocol.constants import RORG
 
 from .device import EnOceanEntity
 from .const import DATA_ENOCEAN, ENOCEAN_DONGLE

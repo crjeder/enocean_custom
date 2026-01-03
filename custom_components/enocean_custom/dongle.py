@@ -4,8 +4,8 @@ import logging
 from os.path import basename, normpath
 
 from homeassistant.helpers.entity import ToggleEntity
-from enocean.communicators import SerialCommunicator
-from enocean.protocol.packet import RadioPacket, UTETeachInPacket
+from .enocean.communicators import SerialCommunicator
+from .enocean.protocol.packet import RadioPacket, UTETeachInPacket
 import serial
 
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
