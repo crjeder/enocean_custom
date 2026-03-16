@@ -1,0 +1,39 @@
+# Home Assistant configuration for integration testing
+# This is a minimal config that loads enocean_custom against the virtual serial dongle.
+
+default_config:
+
+homeassistant:
+  name: Test Home
+  latitude: 48.2082
+  longitude: 16.3738
+  elevation: 171
+  unit_system: metric
+  time_zone: Europe/Vienna
+
+logger:
+  default: warning
+  logs:
+    custom_components.enocean_custom: debug
+
+# EnOcean custom integration pointing at the virtual serial device
+enocean_custom:
+  device: /dev/ttyVirtual0
+
+# Pre-configure a cover device for integration tests (D2-05-00 roller shutter)
+cover:
+  - platform: enocean_custom
+    id: [0xDE, 0xAD, 0xBE, 0xEF]
+    name: "Test Cover"
+
+# Pre-configure a binary sensor (D5-00-01 contact)
+binary_sensor:
+  - platform: enocean_custom
+    id: [0xDE, 0xAD, 0xBE, 0x01]
+    name: "Test Contact"
+    device_class: opening
+
+http:
+  # Allow connections from test runner container
+  cors_allowed_origins:
+    - "http://test-runner:8000"

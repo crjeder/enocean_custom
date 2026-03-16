@@ -1,0 +1,5 @@
+# .gitignore
+.claude/settings.json
+.claude/settings.local.json
+.claude/projects/
+.claude/*.local.*

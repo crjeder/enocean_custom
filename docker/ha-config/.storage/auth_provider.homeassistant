@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "auth_provider.homeassistant",
+  "data": {
+    "users": [
+      {
+        "username": "testadmin",
+        "password": "$2b$12$placeholder_bcrypt_hash_for_testing_only_not_real"
+      }
+    ]
+  }
+}

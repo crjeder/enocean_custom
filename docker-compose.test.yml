@@ -1,0 +1,111 @@
+version: "3.9"
+
+networks:
+  test-net:
+    driver: bridge
+
+volumes:
+  ha-results:
+  vserial:
+
+services:
+  # ─── Virtual serial pair ──────────────────────────────────────────────────
+  # Creates a socat PTY pair. One end (/dev/ttyVirtual0) is shared into the
+  # homeassistant container; the other end is a UNIX socket at
+  # /vserial/test_end that the test runner reads/writes.
+  serial-bridge:
+    image: alpine:3.19
+    command: >
+      sh -c "apk add --no-cache socat &&
+             socat
+               PTY,link=/vserial/ha_end,rawer,b57600,perm=0666
+               PTY,link=/vserial/test_end,rawer,b57600,perm=0666 &
+             sleep 3 &&
+             while true; do sleep 30; done"
+    volumes:
+      - vserial:/vserial
+    networks:
+      - test-net
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "test", "-e", "/vserial/ha_end"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+      start_period: 5s
+
+  # ─── Home Assistant ───────────────────────────────────────────────────────
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    depends_on:
+      serial-bridge:
+        condition: service_healthy
+    environment:
+      TZ: Europe/Vienna
+    volumes:
+      # Pre-seeded config (configuration.yaml + .storage/ bootstrap)
+      - ./docker/ha-config:/config
+      # Mount custom integration
+      - ./custom_components:/config/custom_components
+      # Virtual serial device from the serial-bridge container
+      - vserial:/vserial
+    networks:
+      - test-net
+    # Expose HA API to the test runner (service-to-service via test-net)
+    ports:
+      - "8123:8123"
+    # HA needs write access to /config (volume-mounted) and /tmp.
+    # Root fs is read-only; named volume and tmpfs provide the writable surfaces.
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "-H", "Authorization: Bearer test_long_lived_token_for_integration_tests_do_not_use_in_prod", "http://localhost:8123/api/"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+    # Create the virtual device symlink once HA starts
+    # HA needs /dev/ttyVirtual0 → /vserial/ha_end
+    entrypoint: >
+      /bin/bash -c "
+        ln -sf /vserial/ha_end /dev/ttyVirtual0 || true ;
+        exec /init"
+
+  # ─── Test runner ──────────────────────────────────────────────────────────
+  test-runner:
+    build:
+      context: ./docker/test-runner
+      dockerfile: Dockerfile
+    depends_on:
+      homeassistant:
+        condition: service_healthy
+    environment:
+      HA_URL: http://homeassistant:8123
+      # WebSocket URL — plain ws:// is intentional: Docker bridge network, no TLS.
+      # Override with wss:// when testing against an external TLS-enabled instance.
+      HA_WS_URL: ws://homeassistant:8123/api/websocket
+      HA_TOKEN: test_long_lived_token_for_integration_tests_do_not_use_in_prod
+      DONGLE_TEST_SIDE: /vserial/test_end
+    volumes:
+      # Mount the integration tests into the container
+      - ./tests:/tests
+      # Shared virtual serial volume
+      - vserial:/vserial
+      # Results output
+      - ha-results:/results
+    networks:
+      - test-net
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    working_dir: /tests

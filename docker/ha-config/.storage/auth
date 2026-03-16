@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "minor_version": 1,
+  "key": "auth",
+  "data": {
+    "users": [
+      {
+        "id": "test_user_id_0000000000000001",
+        "group_ids": ["system-admin"],
+        "local_only": false,
+        "name": "Test Admin",
+        "is_owner": true,
+        "is_active": true,
+        "system_generated": false,
+        "credentials": []
+      }
+    ],
+    "groups": [],
+    "credentials": [
+      {
+        "id": "test_credential_id_000000000001",
+        "user_id": "test_user_id_0000000000000001",
+        "auth_provider_type": "homeassistant",
+        "auth_provider_id": null,
+        "data": {
+          "username": "testadmin"
+        },
+        "is_new": false
+      }
+    ],
+    "login_flow": [],
+    "refresh_tokens": [
+      {
+        "id": "test_token_id_00000000000000001",
+        "user_id": "test_user_id_0000000000000001",
+        "client_id": null,
+        "client_name": "Test Runner Long-Lived Token",
+        "client_icon": null,
+        "token_type": "long_lived_access_token",
+        "created_at": "2024-01-01T00:00:00+00:00",
+        "access_token_expiration": 315360000,
+        "token": "test_long_lived_token_for_integration_tests_do_not_use_in_prod",
+        "jwt_key": "test_jwt_key_000000000000000000000000000000000000000000000000000000",
+        "last_used_at": null,
+        "last_used_ip": null,
+        "credential_id": null,
+        "version": null
+      }
+    ]
+  }
+}

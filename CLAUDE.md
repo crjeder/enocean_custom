@@ -4,10 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Home Assistant custom integration for EnOcean wireless devices (`enocean_custom`). It extends the official HA EnOcean integration with enhanced cover (roller shutter) support and universal teach-in capabilities.
+This is a Home Assistant custom integration for EnOcean wireless devices (`enocean_custom`). It extends the official HA with universal teach-in capabilities.
 
 - **Domain**: `enocean_custom`
-- **Supported platforms**: cover, binary_sensor, sensor, light, switch
 - **IoT class**: Local Push (direct USB dongle communication)
 
 ## Running Tests
@@ -70,3 +69,6 @@ The `enocean/` subdirectory is a bundled copy of the kipe/enocean library (rathe
 ### Configuration
 
 Devices are configured via YAML (no auto-discovery). The `config_flow.py` handles dongle path detection and validation for the UI-based setup. Legacy YAML config is imported in `__init__.py:async_setup()`.
+
+## Learning
+update CLAUDE.md to learn from mistakes
