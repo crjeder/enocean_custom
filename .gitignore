@@ -1,5 +1,25 @@
-# .gitignore
+# Claude Code
 .claude/settings.json
 .claude/settings.local.json
 .claude/projects/
 .claude/*.local.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# Pytest
+.pytest_cache/
+test-results/
+
+# Docker volumes (local artifacts, not source)
+ha-results/
+
+# Editor
+.vscode/settings.json
+*.swp
