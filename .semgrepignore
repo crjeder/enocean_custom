@@ -1,0 +1,8 @@
+# Semgrep ignore rules
+# See: https://semgrep.dev/docs/ignoring-files-folders-code/
+
+# Docker test infrastructure files. These containers communicate on an
+# isolated bridge network with no TLS termination. Plain WebSocket is
+# intentional here and these files contain no production code.
+docker-compose.test.yml
+docker/
