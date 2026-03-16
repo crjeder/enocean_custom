@@ -6,6 +6,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+
+- `docker-compose.usb.yml` — Docker Compose override to pass through a real USB EnOcean dongle (e.g. `/dev/ttyUSB0`) into the Home Assistant container; device path configurable via `ENOCEAN_DEVICE` env var
+- `docker/ha-config/configuration.yaml` now reads the dongle path from `ENOCEAN_DEVICE` env var (defaults to `/dev/ttyVirtual0`), making both virtual and hardware modes work from the same config
+- README "Docker Test Environment" section documenting virtual mode, hardware mode usage, Linux `dialout` group requirement, and Windows limitation
+
 ## [0.1.0] - 2023-03-16
 
 ### Added

@@ -46,6 +46,48 @@ To communicate with your devices, your dongle must be registred into your device
   - **Limitations?**
   Sometimes, the messages are not received by the devices (like covers), I think it's a limitation of enocean. To do it well, I should check if a status message is received after sending the message, and retry if no message is received. But it doesn't happen often, so, for now it was OK.
 
+## Docker Test Environment
+
+The repo includes a Docker Compose-based integration test environment. By default it uses a virtual serial bridge (socat) so no hardware is required.
+
+### Virtual mode (CI / no hardware)
+
+```bash
+docker compose -f docker-compose.test.yml up
+```
+
+### Hardware mode (real USB dongle)
+
+Pass through the host USB device to the Home Assistant container using the override file.
+
+**1. Find the dongle path on your host:**
+
+```bash
+ls /dev/ttyUSB* /dev/ttyACM*
+```
+
+Common paths: `/dev/ttyUSB0` (USB300/USB500), `/dev/ttyACM0` (some USB dongles).
+
+**2. Add your user to the `dialout` group (Linux):**
+
+```bash
+sudo usermod -aG dialout $USER
+# Log out and back in for the change to take effect
+```
+
+**3. Start the stack with the USB override:**
+
+```bash
+ENOCEAN_DEVICE=/dev/ttyUSB0 docker compose \
+  -f docker-compose.test.yml \
+  -f docker-compose.usb.yml \
+  up
+```
+
+Set `ENOCEAN_DEVICE` to match your actual device path. The default is `/dev/ttyUSB0`.
+
+> **Windows:** Docker Desktop does not support USB device passthrough. Hardware mode is only supported on Linux and macOS hosts.
+
 ## Links
 
 - [Official EnOcean integration](https://www.home-assistant.io/integrations/enocean/)

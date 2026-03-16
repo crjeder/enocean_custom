@@ -1,0 +1,21 @@
+# Docker Compose override for real USB EnOcean hardware
+#
+# Usage:
+#   ENOCEAN_DEVICE=/dev/ttyUSB0 docker compose \
+#     -f docker-compose.test.yml \
+#     -f docker-compose.usb.yml \
+#     up
+#
+# The default device path is /dev/ttyUSB0. Override with the ENOCEAN_DEVICE
+# environment variable if your dongle appears at a different path (e.g. /dev/ttyACM0).
+
+services:
+  homeassistant:
+    environment:
+      ENOCEAN_DEVICE: ${ENOCEAN_DEVICE:-/dev/ttyUSB0}
+    devices:
+      - "${ENOCEAN_DEVICE:-/dev/ttyUSB0}:${ENOCEAN_DEVICE:-/dev/ttyUSB0}"
+    depends_on:
+      serial-bridge:
+        condition: service_started
+        required: false

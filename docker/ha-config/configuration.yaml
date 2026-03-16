@@ -16,9 +16,9 @@ logger:
   logs:
     custom_components.enocean_custom: debug
 
-# EnOcean custom integration pointing at the virtual serial device
+# EnOcean custom integration — device path from env var, defaults to virtual serial
 enocean_custom:
-  device: /dev/ttyVirtual0
+  device: !env_var ENOCEAN_DEVICE /dev/ttyVirtual0
 
 # Pre-configure a cover device for integration tests (D2-05-00 roller shutter)
 cover:
